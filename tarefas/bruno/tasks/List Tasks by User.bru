@@ -1,0 +1,11 @@
+meta {
+  name: List Tasks by User
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/tasks?assignedTo=user-1
+  body: none
+  auth: none
+}

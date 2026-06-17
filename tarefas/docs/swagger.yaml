@@ -1,0 +1,264 @@
+basePath: /
+definitions:
+  domain.Task:
+    properties:
+      assignedTo:
+        example: user-uuid
+        type: string
+      createdAt:
+        example: "2026-01-01T00:00:00Z"
+        type: string
+      description:
+        example: Adicionar JWT ao backend da API
+        type: string
+      id:
+        example: 550e8400-e29b-41d4-a716-446655440000
+        type: string
+      status:
+        enum:
+        - pending
+        - in_progress
+        - done
+        example: pending
+        type: string
+      title:
+        example: Implementar autenticação
+        type: string
+      updatedAt:
+        example: "2026-01-01T00:00:00Z"
+        type: string
+    type: object
+  http.createTaskRequest:
+    properties:
+      assignedTo:
+        example: user-uuid
+        type: string
+      description:
+        example: Adicionar JWT ao backend
+        type: string
+      status:
+        example: pending
+        type: string
+      title:
+        example: Implementar autenticação
+        type: string
+    type: object
+  http.errorResponse:
+    properties:
+      error:
+        example: mensagem de erro
+        type: string
+    type: object
+  http.updateTaskRequest:
+    properties:
+      assignedTo:
+        example: user-uuid
+        type: string
+      description:
+        example: Nova descrição
+        type: string
+      status:
+        example: in_progress
+        type: string
+      title:
+        example: Título atualizado
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    name: Gestao de Tarefas
+  description: REST API for collaborative task management. All endpoints require a
+    valid JWT Bearer token.
+  license:
+    name: MIT
+  termsOfService: http://swagger.io/terms/
+  title: Tarefas API
+  version: "1.0"
+paths:
+  /tasks:
+    get:
+      description: Retorna todas as tarefas atribuídas a um usuário. Usuários regulares
+        só podem listar suas próprias tarefas. Administradores podem listar de qualquer
+        usuário.
+      parameters:
+      - description: ID do usuário
+        in: query
+        name: assignedTo
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Task'
+            type: array
+        "400":
+          description: Parâmetro assignedTo ausente
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "401":
+          description: Não autenticado
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "403":
+          description: Sem permissão
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+      security:
+      - BearerAuth: []
+      summary: Listar tarefas atribuídas a um usuário
+      tags:
+      - tasks
+    post:
+      consumes:
+      - application/json
+      description: Cria uma nova tarefa. Usuários regulares só podem criar tarefas
+        para si mesmos. Administradores podem atribuir a qualquer usuário.
+      parameters:
+      - description: Dados da tarefa
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/http.createTaskRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.Task'
+        "400":
+          description: Dados inválidos
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "401":
+          description: Não autenticado
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "500":
+          description: Erro interno
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+      security:
+      - BearerAuth: []
+      summary: Criar uma nova tarefa
+      tags:
+      - tasks
+  /tasks/{id}:
+    delete:
+      description: Remove uma tarefa pelo seu ID. Usuários regulares só podem remover
+        suas próprias tarefas. Administradores podem remover qualquer tarefa.
+      parameters:
+      - description: ID da tarefa
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Tarefa removida com sucesso
+        "401":
+          description: Não autenticado
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "403":
+          description: Sem permissão
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "404":
+          description: Tarefa não encontrada
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+      security:
+      - BearerAuth: []
+      summary: Remover uma tarefa
+      tags:
+      - tasks
+    get:
+      description: Retorna os detalhes de uma tarefa pelo seu ID.
+      parameters:
+      - description: ID da tarefa
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Task'
+        "401":
+          description: Não autenticado
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "404":
+          description: Tarefa não encontrada
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+      security:
+      - BearerAuth: []
+      summary: Obter detalhes de uma tarefa
+      tags:
+      - tasks
+    put:
+      consumes:
+      - application/json
+      description: Atualiza o título, descrição, status ou responsável de uma tarefa.
+        Usuários regulares só podem atualizar suas próprias tarefas. Apenas administradores
+        podem reatribuir tarefas.
+      parameters:
+      - description: ID da tarefa
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Campos a atualizar (todos opcionais)
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/http.updateTaskRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Task'
+        "400":
+          description: Dados inválidos
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "401":
+          description: Não autenticado
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "403":
+          description: Sem permissão
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "404":
+          description: Tarefa não encontrada
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+      security:
+      - BearerAuth: []
+      summary: Atualizar informações da tarefa
+      tags:
+      - tasks
+securityDefinitions:
+  BearerAuth:
+    description: 'JWT Bearer token. Format: "Bearer {token}"'
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

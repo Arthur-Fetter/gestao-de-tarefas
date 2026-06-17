@@ -1,0 +1,389 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "REST API for collaborative task management. All endpoints require a valid JWT Bearer token.",
+        "title": "Tarefas API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "Gestao de Tarefas"
+        },
+        "license": {
+            "name": "MIT"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/tasks": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retorna todas as tarefas atribuídas a um usuário. Usuários regulares só podem listar suas próprias tarefas. Administradores podem listar de qualquer usuário.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Listar tarefas atribuídas a um usuário",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID do usuário",
+                        "name": "assignedTo",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.Task"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Parâmetro assignedTo ausente",
+                        "schema": {
+                            "$ref": "#/definitions/http.errorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado",
+                        "schema": {
+                            "$ref": "#/definitions/http.errorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Sem permissão",
+                        "schema": {
+                            "$ref": "#/definitions/http.errorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Cria uma nova tarefa. Usuários regulares só podem criar tarefas para si mesmos. Administradores podem atribuir a qualquer usuário.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Criar uma nova tarefa",
+                "parameters": [
+                    {
+                        "description": "Dados da tarefa",
+                        "name": "task",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/http.createTaskRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Task"
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos",
+                        "schema": {
+                            "$ref": "#/definitions/http.errorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado",
+                        "schema": {
+                            "$ref": "#/definitions/http.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno",
+                        "schema": {
+                            "$ref": "#/definitions/http.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retorna os detalhes de uma tarefa pelo seu ID.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Obter detalhes de uma tarefa",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID da tarefa",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Task"
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado",
+                        "schema": {
+                            "$ref": "#/definitions/http.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Tarefa não encontrada",
+                        "schema": {
+                            "$ref": "#/definitions/http.errorResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Atualiza o título, descrição, status ou responsável de uma tarefa. Usuários regulares só podem atualizar suas próprias tarefas. Apenas administradores podem reatribuir tarefas.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Atualizar informações da tarefa",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID da tarefa",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Campos a atualizar (todos opcionais)",
+                        "name": "task",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/http.updateTaskRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Task"
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos",
+                        "schema": {
+                            "$ref": "#/definitions/http.errorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado",
+                        "schema": {
+                            "$ref": "#/definitions/http.errorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Sem permissão",
+                        "schema": {
+                            "$ref": "#/definitions/http.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Tarefa não encontrada",
+                        "schema": {
+                            "$ref": "#/definitions/http.errorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Remove uma tarefa pelo seu ID. Usuários regulares só podem remover suas próprias tarefas. Administradores podem remover qualquer tarefa.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Remover uma tarefa",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID da tarefa",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Tarefa removida com sucesso"
+                    },
+                    "401": {
+                        "description": "Não autenticado",
+                        "schema": {
+                            "$ref": "#/definitions/http.errorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Sem permissão",
+                        "schema": {
+                            "$ref": "#/definitions/http.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Tarefa não encontrada",
+                        "schema": {
+                            "$ref": "#/definitions/http.errorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "domain.Task": {
+            "type": "object",
+            "properties": {
+                "assignedTo": {
+                    "type": "string",
+                    "example": "user-uuid"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "example": "2026-01-01T00:00:00Z"
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Adicionar JWT ao backend da API"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "550e8400-e29b-41d4-a716-446655440000"
+                },
+                "status": {
+                    "type": "string",
+                    "enum": [
+                        "pending",
+                        "in_progress",
+                        "done"
+                    ],
+                    "example": "pending"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Implementar autenticação"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "example": "2026-01-01T00:00:00Z"
+                }
+            }
+        },
+        "http.createTaskRequest": {
+            "type": "object",
+            "properties": {
+                "assignedTo": {
+                    "type": "string",
+                    "example": "user-uuid"
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Adicionar JWT ao backend"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "pending"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Implementar autenticação"
+                }
+            }
+        },
+        "http.errorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "mensagem de erro"
+                }
+            }
+        },
+        "http.updateTaskRequest": {
+            "type": "object",
+            "properties": {
+                "assignedTo": {
+                    "type": "string",
+                    "example": "user-uuid"
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Nova descrição"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "in_progress"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Título atualizado"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "description": "JWT Bearer token. Format: \"Bearer {token}\"",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}

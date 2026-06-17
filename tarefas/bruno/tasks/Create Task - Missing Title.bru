@@ -1,0 +1,18 @@
+meta {
+  name: Create Task - Missing Title
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/tasks
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "description": "No title provided",
+    "assignedTo": "user-1"
+  }
+}
