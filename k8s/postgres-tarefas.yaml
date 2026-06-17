@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-tarefas
+  namespace: default
+spec:
+  serviceName: postgres-tarefas
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-tarefas
+  template:
+    metadata:
+      labels:
+        app: postgres-tarefas
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16-alpine
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: tarefas
+            - name: POSTGRES_PASSWORD
+              value: tarefas
+            - name: POSTGRES_DB
+              value: tarefas
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"
+          volumeMounts:
+            - name: pgdata
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: pgdata
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-tarefas
+  namespace: default
+spec:
+  selector:
+    app: postgres-tarefas
+  ports:
+    - port: 5432
+      targetPort: 5432
