@@ -1,0 +1,96 @@
+.app {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 32px 24px 48px;
+}
+
+.app__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.app__title {
+  font-size: 2rem;
+  margin: 0;
+  color: #2f4858;
+}
+
+.app__user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.app__user-name {
+  font-size: 0.9rem;
+  color: #2f4858;
+  font-weight: 600;
+}
+
+.app__user-role {
+  font-size: 0.75rem;
+  color: #2f4858;
+  opacity: 0.6;
+  background: rgba(47, 72, 88, 0.08);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.app__logout-btn {
+  font-size: 0.8rem;
+  color: #f97068;
+  background: none;
+  border: 1px solid #f97068;
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.app__logout-btn:hover {
+  background: rgba(249, 112, 104, 0.1);
+}
+
+.app__empty {
+  color: #2f4858;
+  opacity: 0.5;
+  text-align: center;
+  padding: 24px 0;
+  font-size: 0.95rem;
+}
+
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.add-task-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 16px;
+  padding: 14px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2f4858;
+  background: transparent;
+  border: 3px dashed #2f4858;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.add-task-btn:hover {
+  background: rgba(252, 215, 87, 0.2);
+  border-color: #fcd757;
+}
+
+.app__error {
+  color: #f97068;
+  font-size: 0.95rem;
+}

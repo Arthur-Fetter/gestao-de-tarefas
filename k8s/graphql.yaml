@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: graphql
+  namespace: default
+  labels:
+    app: graphql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: graphql
+  template:
+    metadata:
+      labels:
+        app: graphql
+    spec:
+      containers:
+        - name: graphql
+          image: graphql:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 4000
+          env:
+            - name: JWT_SECRET
+              value: "dev-jwt-secret-change-in-production"
+            - name: DATABASE_URL
+              value: "postgres://tarefas:tarefas@postgres-tarefas:5432/tarefas"
+            - name: TAREFAS_SERVICE_URL
+              value: "http://tarefas"
+            - name: GOOGLE_CLIENT_ID
+              value: ""
+            - name: GOOGLE_CLIENT_SECRET
+              value: ""
+            - name: GOOGLE_REDIRECT_URI
+              value: "http://localhost:8080/callback"
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: graphql
+  namespace: default
+spec:
+  selector:
+    app: graphql
+  ports:
+    - port: 80
+      targetPort: 4000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: graphql
+  namespace: default
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: graphql.localhost
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: graphql
+                port:
+                  number: 80

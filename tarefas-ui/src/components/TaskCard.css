@@ -1,0 +1,165 @@
+.task-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: #f7f5fb;
+  border: 3px solid #2f4858;
+  border-radius: 8px;
+  transition: border-color 0.15s;
+}
+
+.task-card--done .task-card__title {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+.task-card--done .task-card__description {
+  opacity: 0.4;
+}
+
+.task-card__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.task-card__title {
+  margin: 0 0 4px 0;
+  font-size: 1.25rem;
+  color: #2f4858;
+  cursor: text;
+}
+
+.task-card__description {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #2f4858;
+  opacity: 0.75;
+  cursor: text;
+}
+
+.task-card__input {
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid #fcd757;
+  background: transparent;
+  color: #2f4858;
+  font-family: inherit;
+  outline: none;
+  padding: 2px 0;
+}
+
+.task-card__input--title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.task-card__input--description {
+  font-size: 0.95rem;
+}
+
+.task-card__assignee {
+  margin-top: 6px;
+}
+
+.task-card__assignee-name {
+  font-size: 0.8rem;
+  color: #2f4858;
+  opacity: 0.6;
+}
+
+.task-card__assignee-name--editable {
+  cursor: pointer;
+  text-decoration: underline dotted;
+  opacity: 0.75;
+}
+
+.task-card__assignee-name--editable:hover {
+  opacity: 1;
+  color: #00916e;
+}
+
+.task-card__assignee-select {
+  font-size: 0.8rem;
+  color: #2f4858;
+  border: 1px solid #fcd757;
+  border-radius: 4px;
+  background: #f7f5fb;
+  padding: 2px 6px;
+  font-family: inherit;
+  outline: none;
+}
+
+
+.task-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 16px;
+}
+
+.task-card__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+
+/* Status button */
+.task-card__status-btn {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.task-card__status-btn--pending {
+  background: rgba(252, 215, 87, 0.25);
+  border-color: #fcd757;
+  color: #2f4858;
+}
+
+.task-card__status-btn--pending:hover {
+  background: rgba(252, 215, 87, 0.5);
+}
+
+.task-card__status-btn--in_progress {
+  background: rgba(0, 145, 110, 0.15);
+  border-color: #00916e;
+  color: #00916e;
+}
+
+.task-card__status-btn--in_progress:hover {
+  background: rgba(0, 145, 110, 0.25);
+}
+
+.task-card__status-btn--done {
+  background: rgba(47, 72, 88, 0.1);
+  border-color: #2f4858;
+  color: #2f4858;
+}
+
+.task-card__status-btn--done:hover {
+  background: rgba(47, 72, 88, 0.2);
+}
+
+.task-card__status-label {
+  pointer-events: none;
+}
+
+.task-card__btn--delete {
+  color: #f97068;
+}
+
+.task-card__btn--delete:hover {
+  background: rgba(249, 112, 104, 0.1);
+}
